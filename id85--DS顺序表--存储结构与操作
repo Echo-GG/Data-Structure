@@ -1,0 +1,116 @@
+#include <iostream>
+using namespace std;
+class Tabel
+{
+private:
+	int* arr;
+	int real_len;
+	int max_len;
+public:
+	Tabel(int len)
+	{
+		arr = new int[max_len];
+		max_len = 1000;
+		real_len = len;
+	}
+	void Init(int num[],int size)
+	{
+		real_len = size;
+		for (int i = 0; i < size; i++)
+		{
+			arr[i] = num[i];
+		}
+		//输出刚建立好的tabel的信息
+		cout << real_len << " ";
+		for (int i = 0; i < real_len; i++)
+		{
+			cout << *(arr + i) << " ";
+		}
+		cout << endl;
+	}
+	void Insert(int pos, int val)
+	{
+		pos--;
+		if (pos < 0 || pos >= real_len)
+		{
+			cout << "error" << endl;
+			return;
+		}
+		for (int i = real_len-1; i >= pos; i--)
+		{
+			arr[i+1] = arr[i];
+		}
+		arr[pos] = val;
+		real_len++;
+
+		//输出此时table的实际长度
+		cout << real_len << " ";
+		//输出此时tabel中的数据
+		for (int i = 0; i < real_len; i++)
+		{
+				cout << arr[i] << " ";
+		}
+		cout << endl;
+	}
+	void Delete(int pos)
+	{
+		pos--;
+		if (pos < 0 || pos >= real_len)
+		{
+			cout << "error" << endl;
+			return;
+		}
+		for (int i = pos; i < real_len-1; i++)
+		{
+			arr[i] = arr[i + 1];
+		}
+		real_len--;
+		//输出此时的tabel信息
+		cout << real_len << " ";
+		for (int i = 0; i < real_len; i++)
+		{
+				cout << *(arr + i) << " ";
+		}
+		cout << endl;
+	}
+	void Search(int pos)
+	{
+		pos--;
+		if (pos < 0 || pos >= real_len)
+		{
+			cout << "error" << endl;
+			return;
+		}
+		cout << arr[pos] << endl;
+	}
+};
+int main()
+{
+	int n;
+	cin >> n;
+	Tabel tabel(n);
+	int* num = new int[n];
+	for (int i = 0; i < n; i++)
+	{
+		cin >> *(num + i);
+	}
+	tabel.Init(num, n);
+	int insert_pos1, insert_pos2;
+	int insert_data1, insert_data2;
+	cin >> insert_pos1 >> insert_data1;
+	tabel.Insert(insert_pos1, insert_data1);
+	cin >> insert_pos2 >> insert_data2;
+	tabel.Insert(insert_pos2, insert_data2);
+	int delete_pos1, delete_pos2;
+	cin >> delete_pos1;
+	tabel.Delete(delete_pos1);
+	cin >> delete_pos2;
+	tabel.Delete(delete_pos2);
+	int search_pos1, search_pos2;
+	cin >> search_pos1;
+	tabel.Search(search_pos1);
+	cin >> search_pos2;
+	tabel.Search(search_pos2);
+	delete[]num;
+	return 0;
+}
