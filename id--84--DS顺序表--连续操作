@@ -1,0 +1,108 @@
+#include <iostream>
+using namespace std;
+class Table
+{
+private:
+	int* arr;
+	int real_size;
+	int max_size;
+public:
+	Table(int n) :real_size(n)
+	{
+		max_size = 1000;
+		arr = new int[max_size];
+	}
+	void Init(int num[], int n)
+	{
+		real_size = n;
+		for (int i = 0; i < n; i++)
+		{
+			*(arr + i) = *(num + i);
+		}
+		//输出刚创建的顺序表信息
+		cout << real_size << " ";
+		for (int i = 0; i < real_size; i++)
+		{
+			cout << arr[i] << " ";
+		}
+		cout << endl;
+	}
+	void multi_insert(int i,int n,int item[])//在第i个位置,连续插入item数组中的n个元素.
+	{
+		i--;
+		if (i < 0 || i >= real_size)
+		{
+			cout << "error" << endl;
+			return;
+		}
+		for (int j = real_size-1; j >= i; j--)
+		{
+			arr[j + n] = arr[j];
+		}
+		for (int j = i; j < i + n; j++)
+		{
+			arr[j] = item[j - i];
+		}
+		real_size += n;
+		//输出当前label信息
+		cout << real_size << " ";
+		for (int i = 0; i < real_size; i++)
+		{
+			cout << *(arr + i) << " ";
+		}
+		cout << endl;
+	}
+	void multi_delete(int i, int n)//从第i个位置开始,连续删除n个数据
+	{
+		i--;
+		if (i < 0 || i >= real_size)
+		{
+			cout << "error" << endl;
+			return;
+		}
+		if (i + n - 1 >= real_size)
+		{
+			cout << "error" << endl;
+			return;
+		}
+		for (int j = i; j < i + n ; j++)
+		{
+			arr[j] = arr[j + n];
+		}
+		real_size -= n;
+		cout << real_size << " ";
+		for (int i = 0; i < real_size; i++)
+		{
+			cout << arr[i] << " ";
+		}
+		cout << endl;
+	}
+};
+int main()
+{
+	int n;
+	cin >> n;
+	int* num = new int[n];
+	for (int i = 0; i < n; i++)
+	{
+		cin >> *(num + i);
+	}
+	Table table(n);
+	table.Init(num,n);
+	int i1, k1;
+	cin >> i1 >> k1;
+	//i1表示插入开始的位置,k1表示有k个插入数据;
+	int* item = new int[k1];
+	for (int i = 0; i < k1; i++)
+	{
+		cin >> *(item + i);
+	}
+	table.multi_insert(i1, k1, item);
+	int i2, k2;
+	cin >> i2 >> k2;
+	table.multi_delete(i2, k2);
+
+	delete[]item;
+	delete[]num;
+	return 0;
+}
