@@ -1,0 +1,87 @@
+#include <iostream>
+using namespace std;
+class Table
+{
+private:
+	int* arr;
+	int real_size;
+	int max_size;
+public:
+	Table(int n) :real_size(n)
+	{
+		max_size = 1000;
+		arr = new int[max_size];
+	}
+	void Init(int num[], int n)
+	{
+		for (int i = 0; i < n; i++)
+		{
+			arr[i] = num[i];
+		}
+	}
+	void Merge(const Table& other)
+	{
+		//归并排序
+		int final_len = real_size + other.real_size;
+		Table result_table(final_len);
+		int* p = arr;
+		int* q = other.arr;
+		int cnt = 0;
+		while (p < &arr[real_size] && q< &other.arr[other.real_size])
+		{
+			if (*p < *q)
+			{
+				result_table.arr[cnt++] = *p++;
+		
+			}
+			else
+			{
+				result_table.arr[cnt++] = *q++;
+			
+			}
+		}
+
+		while (p < &arr[real_size])
+		{
+			result_table.arr[cnt++] = *p++;
+		}
+		while (q < &other.arr[other.real_size])
+		{
+			result_table.arr[cnt++] = *q++;
+		}
+		//打印合并后的顺序表信息
+		cout << final_len << " ";
+		for (int i = 0; i < final_len; i++)
+		{
+			cout << result_table.arr[i] << " ";
+		}
+		cout << endl;
+	}
+};
+int main()
+{
+	int n;
+	cin >> n;
+	int* num1 = new int[n];
+	for (int i = 0; i < n; i++)
+	{
+		cin >> *(num1 + i);
+	}
+	Table table1(n);
+	table1.Init(num1, n);
+	int m;
+	cin >> m;
+	int* num2 = new int[m];
+	for (int i = 0; i < m; i++)
+	{
+		cin >> *(num2 + i);
+	}
+	Table table2(m);
+	table2.Init(num2,m);
+	table1.Merge(table2);
+
+	delete[]num2;
+	delete[]num1;
+
+	return 0;
+}
