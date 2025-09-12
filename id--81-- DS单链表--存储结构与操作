@@ -1,0 +1,160 @@
+#include <iostream>
+using namespace std;
+
+struct LinkedNode
+{
+    int data;
+    LinkedNode* next;
+    LinkedNode(int n) :data(n), next(nullptr) {}
+};
+
+class LinkedList
+{
+private:
+    LinkedNode* head; // 虚拟头结点
+    int SIZE;
+
+public:
+    LinkedList()
+    {
+        head = new LinkedNode(0); // 初始化虚拟头结点
+        SIZE = 0;
+    }
+    ~LinkedList()
+    {
+        LinkedNode* current = head;
+        while (current)//只要 current 不是空指针（nullptr），就继续循环。
+        //链表的结尾是nullptr。
+        {
+            LinkedNode* tmp = current;
+            current = current->next;
+            delete tmp;
+        }
+        //tmp 只是一个指针，负责找到需要销毁的节点。
+        // delete tmp; 释放的是 tmp 指向的节点内存，而不是指针变量本身。
+        //指针本身是一个局部变量或成员变量，不需要手动释放，它会在离开作用域时自动销毁。
+    }
+    void addNode(int val)
+    {
+        LinkedNode* new_node = new LinkedNode(val);
+        LinkedNode* current = head;
+        while (current->next)
+        {
+            current = current->next;
+        }
+        //循环结束时current指针已经位于链表的最末尾了.
+
+        // 此时若无后续操作,则:current->next = nullptr;
+
+        current->next = new_node;
+        //添加新节点.
+        
+        SIZE++;
+    }
+    void Insert(int pos, int val)
+    {
+        if (pos < 1 || pos > SIZE + 1)//不允许在第0个位置执行插入操作
+            //可以在第SIZE个位置执行插入操作.
+        {
+            cout << "error" << endl;
+            return;
+        }
+
+        LinkedNode* prev = head;//虚拟头结点,可认为是第0个位置.
+        for (int i = 1; i < pos; i++)//移动了总计pos - 1次prev指针.
+        {
+            prev = prev->next;
+        }
+        //循环结束,prev从指向第0个位置,变为指向第pos - 1个位置,即目标位置的前一个位置.
+        LinkedNode* new_node = new LinkedNode(val);
+        new_node->next = prev->next;
+        prev->next = new_node;
+        SIZE++;
+    }
+    void Delete(int pos)
+    {
+        if (pos < 1 || pos > SIZE)//不允许删除第0个位置,可以删除第SIZE个位置.
+        {
+            cout << "error" << endl;
+            return;
+        }
+        LinkedNode* prev = head;
+        for (int i = 1; i < pos; i++) // 移动了总计pos - 1次prev指针.
+        {
+            prev = prev->next;
+        }
+        //循环结束,prev从指向第0个位置,变为指向第pos - 1个位置,即目标位置的前一个位置.
+
+        LinkedNode* tmp = prev->next;//此时tmp指向的内存地址就是待删除的目标内存位置.
+        prev->next = tmp->next;//连接当前位置的前一位置和当前位置的后一位置.
+        delete tmp;//删除当前位置(即目标待删位置).
+        SIZE--;
+    }
+    void Search(int pos)
+    {
+        if (pos < 1 || pos > SIZE)//不允许查找第0个位置,允许查找第SIZE个位置.
+        {
+            cout << "error" << endl;
+            return;
+        }
+        LinkedNode* current = head->next;//不同于前面：
+        //此时current指针指向链表中的第一个元素的位置。
+        for (int i = 1; i < pos ; i++)// 移动了总计pos - 1次prev指针.
+        {
+            current = current->next;
+        }
+        //循环结束,prev从指向第1个位置,变为指向第 pos 个位置,即目标位置。
+
+        cout << current->data << endl;
+        //输出目标位置的数据.
+    }
+    void printList()
+    {
+        LinkedNode* current = head->next;
+        //head为虚拟头结点指针。
+        // head->next指向的节点指针对应的内存中的数据才是链表的第一个数据.
+        //通过current指针来访问链表中的各个元素.+
+        while (current)
+        {
+            cout << current->data << " ";
+            current = current->next;
+        }
+        //循环结束时.current指针指向链表中最后一个元素的内存位置.
+        cout << endl;
+    }
+};
+
+int main()
+{
+    int n;
+    cin >> n;
+    LinkedList list;
+    for (int i = 0; i < n; i++)
+    {
+        int val;
+        cin >> val;
+        list.addNode(val);
+    }
+    list.printList();
+    int insert_pos1, insert_data1;
+    cin >> insert_pos1 >> insert_data1;
+    list.Insert(insert_pos1, insert_data1);
+    list.printList();
+    int insert_pos2, insert_data2;
+    cin >> insert_pos2 >> insert_data2;
+    list.Insert(insert_pos2, insert_data2);
+    list.printList();
+    int delete_pos1, delete_pos2;
+    cin >> delete_pos1;
+    list.Delete(delete_pos1);
+    list.printList();
+    cin >> delete_pos2;
+    list.Delete(delete_pos2);
+    list.printList();
+    int search_pos1, search_pos2;
+    cin >> search_pos1;
+    list.Search(search_pos1);
+    cin >> search_pos2;
+    list.Search(search_pos2);
+    return 0;
+}
