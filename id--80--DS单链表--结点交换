@@ -1,0 +1,146 @@
+#include <iostream>
+using namespace std;
+struct LinkedNode
+{
+	int data;
+	LinkedNode* next;
+	LinkedNode(int val) :next(nullptr), data(val) {}
+};
+	class LinkedList
+	{
+	private:
+		LinkedNode* head;
+		int SIZE;
+	public:
+		LinkedList()
+		{
+			SIZE = 0;
+			head = new LinkedNode(0);
+		}
+		void addNode(int data)
+		{
+			LinkedNode* current = head;
+			while (current->next)
+			{
+				current = current->next;
+			}
+			LinkedNode* newNode = new LinkedNode(data);
+			current->next = newNode;
+			SIZE++;
+		}
+
+		void swapNode(LinkedNode* p, LinkedNode* q)
+		{
+
+			//构建双向链表,找到p,q的前驱结点:
+			LinkedNode* prevP = nullptr;
+			LinkedNode* prevQ = nullptr;
+			LinkedNode* current = head;
+
+			while (current && current->next)
+			{
+				if (current->next == p)
+				{
+					prevP = current;
+				}
+				else if (current->next == q)
+				{
+					prevQ = current;
+				}
+				current = current->next;
+			}
+
+			//交换节点
+			if (p->next == q)//p,q相邻：p前q后;
+			{
+				//此时prevQ == p 自动满足
+				prevP->next = q;
+				p->next = q->next;
+				q->next = p;
+			}
+			else if (q->next == p)//p,q相邻：q前p后;
+			{
+				//此时prevP == q 自动满足
+				prevQ->next = p;
+				q->next = p->next;
+				p->next = q;
+			}
+			else//p,q不相邻。
+			{
+				LinkedNode* tmp = p->next;
+				p->next = q->next;
+				q->next = tmp;
+				prevP->next = q;
+				prevQ->next = p;
+			}
+
+		}
+
+		LinkedNode* getNodebyPos(int pos)
+		{
+			if (pos <= 0 || pos > SIZE)
+			{
+				return nullptr;
+			}
+			LinkedNode* current = head;
+			for (int i = 0; i < pos; i++)
+			{
+				current = current->next;
+			}
+			return current;
+		}
+
+		void printList()
+		{
+			LinkedNode* current = head->next;
+			while (current)
+			{
+				cout << current->data << " ";
+				current = current->next;
+			}
+			cout << endl;
+		}
+
+		~LinkedList()
+		{
+			LinkedNode* current = head;
+			while (current)
+			{
+				LinkedNode* tmp = current;
+				current = current->next;
+				delete tmp;
+			}
+		}
+
+	};
+	int main()
+	{
+		int n;
+		cin >> n;
+		LinkedList list;
+		for (int i = 0; i < n; i++)
+		{
+			int val;
+			cin >> val;
+			list.addNode(val);
+		}
+		list.printList();
+		int k = 2;
+		while (k--)
+		{
+			int pos1, pos2;
+			cin >> pos1 >> pos2;
+			LinkedNode* p = list.getNodebyPos(pos1);
+			LinkedNode* q = list.getNodebyPos(pos2);
+			if (p == q || !p || !q)
+			{
+				cout << "error" << endl;
+				return 0;
+			}
+
+			list.swapNode(p, q);
+			list.printList();
+		}
+		return 0;
+	}
+
