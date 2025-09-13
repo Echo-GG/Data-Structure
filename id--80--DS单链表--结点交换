@@ -28,44 +28,38 @@ struct LinkedNode
 			current->next = newNode;
 			SIZE++;
 		}
-
-		void swapNode(LinkedNode* p, LinkedNode* q)
+		void swapNode(int pos1,int pos2)
 		{
-
-			//构建双向链表,找到p,q的前驱结点:
+			LinkedNode* p = getNodebyPos(pos1);
+			LinkedNode* q = getNodebyPos(pos2);
 			LinkedNode* prevP = nullptr;
 			LinkedNode* prevQ = nullptr;
 			LinkedNode* current = head;
-
 			while (current && current->next)
 			{
 				if (current->next == p)
 				{
 					prevP = current;
 				}
-				else if (current->next == q)
+				if (current->next == q)
 				{
 					prevQ = current;
 				}
 				current = current->next;
 			}
-
-			//交换节点
-			if (p->next == q)//p,q相邻：p前q后;
+			if (p->next == q)//p,q相邻:p前q后
 			{
-				//此时prevQ == p 自动满足
 				prevP->next = q;
 				p->next = q->next;
 				q->next = p;
 			}
-			else if (q->next == p)//p,q相邻：q前p后;
+			else if (q->next == p)//p,q相邻:q前p后
 			{
-				//此时prevP == q 自动满足
 				prevQ->next = p;
 				q->next = p->next;
 				p->next = q;
 			}
-			else//p,q不相邻。
+			else//不相邻
 			{
 				LinkedNode* tmp = p->next;
 				p->next = q->next;
@@ -73,8 +67,53 @@ struct LinkedNode
 				prevP->next = q;
 				prevQ->next = p;
 			}
-
 		}
+		//void swapNode(LinkedNode* p, LinkedNode* q)
+		//{
+
+		//	//构建双向链表,找到p,q的前驱结点:
+		//	LinkedNode* prevP = nullptr;
+		//	LinkedNode* prevQ = nullptr;
+		//	LinkedNode* current = head;
+		//	
+		//	while (current && current->next)
+		//	{
+		//		if (current->next == p)
+		//		{
+		//			prevP = current;
+		//		}
+		//		if (current->next == q)
+		//		{
+		//			prevQ = current;
+		//		}
+		//		current = current->next;
+		//	}
+
+		//	//交换节点
+		//	if (p->next == q)//p,q相邻：p前q后;
+		//	{
+		//		//此时prevQ == p 自动满足
+		//		prevP->next = q;
+		//		p->next = q->next;
+		//		q->next = p;
+		//	}
+		//	else if (q->next == p)//p,q相邻：q前p后;
+		//	{
+		//		//此时prevP == q 自动满足
+		//		prevQ->next = p;
+		//		q->next = p->next;
+		//		p->next = q;
+		//	}
+		//	else//p,q不相邻。
+		//	{
+		//		LinkedNode* tmp = p->next;
+		//		p->next = q->next;
+		//		q->next = tmp;
+		//		prevP->next = q;
+		//		prevQ->next = p;
+		//	}
+
+		//}
 
 		LinkedNode* getNodebyPos(int pos)
 		{
@@ -98,6 +137,18 @@ struct LinkedNode
 				cout << current->data << " ";
 				current = current->next;
 			}
+			//本题未做要求,但倘若题目格式要求最后一个数据后不能有空格,则应这样书写:
+			//while (current)
+			//{
+			//	cout << current->data;
+			//	if (current->next)
+			//	{
+			//		cout << " ";
+			//	}
+			//	current = current->next;
+			//}
+
+
 			cout << endl;
 		}
 
@@ -130,15 +181,23 @@ struct LinkedNode
 		{
 			int pos1, pos2;
 			cin >> pos1 >> pos2;
-			LinkedNode* p = list.getNodebyPos(pos1);
-			LinkedNode* q = list.getNodebyPos(pos2);
-			if (p == q || !p || !q)
+			//LinkedNode* p = list.getNodebyPos(pos1);
+			//LinkedNode* q = list.getNodebyPos(pos2);
+			//if (p == q || !p || !q)
+			//{
+			//	cout << "error" << endl;
+			//	return 0;
+			//}
+
+			//list.swapNode(p, q);
+
+
+			if (pos1 == pos2 || pos1 <= 0 || pos2 <= 0 || pos1 > n || pos2 > n)
 			{
 				cout << "error" << endl;
 				return 0;
 			}
-
-			list.swapNode(p, q);
+			list.swapNode(pos1, pos2);
 			list.printList();
 		}
 		return 0;
