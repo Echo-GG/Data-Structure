@@ -1,0 +1,110 @@
+#include <iostream>
+using namespace std;
+struct LinkedNode
+{
+    LinkedNode* next;
+    int val;
+    LinkedNode(int n):next(nullptr),val(n){}
+};
+class LinkedList
+{
+private:
+    LinkedNode* head;
+    int SIZE;
+public:
+    LinkedList()
+    {
+        head = new LinkedNode(0);
+        SIZE = 0;
+    }
+    void addNode(int data)
+    {
+        LinkedNode* current = head;
+        while (current->next)
+        {
+            current = current->next;
+        }
+        LinkedNode* newNode = new LinkedNode(data);
+        current->next = newNode;
+        SIZE++;
+    }
+
+    // 构建循环链表
+    void makeCircle()
+    {
+        LinkedNode* current = head;
+        while (current->next)
+        {
+            current = current->next;
+        }
+        current->next = head->next; // 尾节点指向第一个实际节点
+    }
+
+    ~LinkedList()
+    {
+        LinkedNode* cur = head;
+        while (cur)
+        {
+            LinkedNode* tmp = cur;
+            cur = cur ->next;
+            delete tmp;
+        }
+
+    }
+
+    // 约瑟夫环算法，返回最后存活的人的编号
+    int josephus(int K, int S)
+    {
+        makeCircle();
+        LinkedNode* prev = head;
+        LinkedNode* current = head->next;
+
+        // 找到第S个人
+        for (int i = 1; i < S; i++)
+        {
+            prev = current;
+            current = current->next;
+        }
+
+        int remain = SIZE;
+        while (remain > 1)
+        {
+            // 找到第K个人
+            for (int i = 1; i < K; i++)
+            {
+                prev = current;
+                current = current->next;
+            }
+            // 删除第K个人
+            prev->next = current->next;
+            LinkedNode* tmp = current;
+            current = current->next;
+            cout << tmp->val << " ";
+            delete tmp;
+            remain--;
+        }
+        int result = current->val;
+        delete current;
+        head->next = nullptr; // 防止析构时重复释放
+        return result;
+    }
+};
+int main()
+{
+    int t;
+    cin >> t;
+    while (t--)
+    {
+        LinkedList list;
+        int N, K, S;
+        cin >> N >> K >> S;
+        for (int i = 1; i <= N; i++)
+        {
+            list.addNode(i);
+        }
+        //list.josephus(K, S);
+        int survivor = list.josephus(K, S);
+        cout << survivor << endl;
+    }
+    return 0;
+}
