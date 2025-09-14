@@ -1,0 +1,184 @@
+#include <iostream>
+using namespace std;
+struct LinkedNode
+{
+	int val;
+	LinkedNode* next;
+	LinkedNode(int n) :val(n), next(nullptr) {}
+};
+class LinkedList
+{
+private:
+	int SIZE;
+	LinkedNode* head;
+public:
+	LinkedList()
+	{
+		SIZE = 0;
+		head = new LinkedNode(0);
+	}
+
+	void addNode(int data)
+	{
+		LinkedNode* current = head;
+		while (current->next)
+		{
+			current = current->next;
+		}
+		LinkedNode* newNode = new LinkedNode(data);
+		current->next = newNode;
+		SIZE++;
+	}
+
+	LinkedNode* getNodebyPos(int pos)
+	{
+		if (pos <= 0 || pos > SIZE)
+		{
+			cout << "error";
+			return nullptr;
+		}
+		//LinkedNode* current = head;
+		//for (int i = 0; i < pos; i++)
+		//{
+		//	current = current->next;
+		//}
+		//return current;
+		////可以返回虚拟头结点
+
+		LinkedNode* current = head->next;
+		for (int i = 1; i < pos; i++)
+		{
+			current = current->next;
+		}
+		return current;
+		//直接从链表的第一个元素开始,不访问虚拟头结点.
+	}
+
+
+	void printList()
+	{
+		LinkedNode* current = head->next;
+		while (current)
+		{
+			cout << current->val << " ";
+			current = current->next;
+		}
+		cout << endl;
+	}
+
+	~LinkedList()
+	{
+		LinkedNode* current = head;
+		while (current)
+		{
+			LinkedNode* tmp = current;
+			current = current->next;
+			delete tmp;
+		}
+	}
+	void setHead(LinkedNode* newHead)
+	{
+		head = newHead;
+	}
+};
+
+int LL_merge(LinkedNode* La, LinkedNode* Lb)
+{
+	// 创建一个虚拟头节点用于构建新链表
+	LinkedNode dummy(0);
+	LinkedNode* tail = &dummy;
+
+	// 创建两个指针分别指向两个链表的头部
+	LinkedNode* pa = La;
+	LinkedNode* pb = Lb;
+
+	int count = 0; // 记录合并后链表的长度
+
+	// 同时遍历两个链表
+	while (pa && pb)
+	{
+		if (pa->val <= pb->val)
+		{
+			tail->next = pa;
+			pa = pa->next;
+		}
+		else
+		{
+			tail->next = pb;
+			pb = pb->next;
+		}
+		tail = tail->next;
+		count++;
+	}
+
+	// 将剩余链表接上
+	if (pa)
+	{
+		tail->next = pa;
+		// 计算剩余节点数
+		while (pa)
+		{
+			count++;
+			pa = pa->next;
+		}
+	}
+	if (pb)
+	{
+		tail->next = pb;
+		// 计算剩余节点数
+		while (pb)
+		{
+			count++;
+			pb = pb->next;
+		}
+	}
+
+	// 输出合并后的结果
+	LinkedNode* current = dummy.next;
+	while (current)
+	{
+		cout << current->val << " ";
+		current = current->next;
+	}
+
+	cout << endl;
+
+	return count;
+}
+
+int main()
+{
+	LinkedList list1;
+	LinkedList list2;
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		int val;
+		cin >> val;
+		list1.addNode(val);
+	}
+	int m;
+	cin >> m;
+	for (int i = 0; i < m; i++)
+	{
+		int val;
+		cin >> val;
+		list2.addNode(val);
+	}
+	LL_merge(list1.getNodebyPos(1), list2.getNodebyPos(1));
+
+	list1.setHead(nullptr);
+	list2.setHead(nullptr);
+	//防止链表悬空
+	return 0;
+}
+/*
+
+•	合并操作并没有新建结点，只是把原链表的结点指针重新链接到一个新的链表（dummy.next）;
+•	原链表的 head 还指向这些结点，新链表的 dummy.next 也指向同样的结点;
+•	这样，同一组结点内容同时属于两个不同的链表结构（即有两种不同的链接关系）;
+•	当两个链表对象析构时，都会从自己的 head 开始释放结点，导致同一个结点被释放两次（二次释放）;
+•	这就是典型的未定义行为，会导致程序崩溃或内存破坏;
+所以，合并后必须断开原链表的头指针（如 setHead(nullptr)）;
+让原链表析构时不再释放这些结点，避免二次释放和悬空指针问题。*/
