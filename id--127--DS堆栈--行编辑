@@ -1,0 +1,28 @@
+#include <iostream>
+#include <stack>
+using namespace std;
+int main()
+{
+	int t;
+	cin >> t;
+	while (t--)
+	{
+		stack<char>c0;
+		string s;
+		cin >> s;
+		for (char c : s)
+		{
+			c0.push(c);
+		}
+		while (!c0.empty())
+		{
+			cout << c0.top();
+			c0.pop();
+		}
+		cout << endl;
+	}
+
+
+
+	return 0;
+}
