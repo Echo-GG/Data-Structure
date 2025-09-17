@@ -1,0 +1,57 @@
+#include <iostream>
+#include <stack>
+using namespace std;
+int main()
+{
+	int t;
+	cin >> t;
+	while (t--)
+	{
+		string s;
+		cin >> s;
+		stack<char>c0;
+		bool matched = true;
+		for (char c : s)
+		{
+			if (c == '(' || c == '[' || c == '{')
+			{
+				c0.push(c);
+			}
+			else if (c == ')' || c == ']' || c == '}')
+			{
+				if (c0.empty())
+				{
+					matched = false;
+					break;
+				}
+				char tmp = c0.top();
+				c0.pop();
+				if (c == ')' && tmp != '(')
+				{
+					matched = false;
+					break;
+				}
+				else if (c == ']' && tmp != '[')
+				{
+					matched = false;
+					break;
+				}
+				else if (c == '}' && tmp != '{')
+				{
+					matched = false;
+					break;
+				}
+			}
+		}
+		if (matched && c0.empty())
+		{
+			cout << "ok" << endl;
+		}
+		else
+		{
+			cout << "error" << endl;
+		}
+	}
+
+	return 0;
+}
