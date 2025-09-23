@@ -1,0 +1,224 @@
+#include <iostream>
+using namespace std;
+class List
+{
+private:
+	int* arr;
+	int SIZE;
+public:
+	List()
+	{
+		arr = nullptr;
+		SIZE = 0;
+	}
+	void InitList(int *num,int size)
+	{
+		if (arr)
+		{
+			delete[]arr;
+		}
+		SIZE = size;
+		arr = new int[SIZE];
+		for (int i = 0; i < SIZE; i++)
+		{
+			arr[i] = num[i];
+		}
+	}
+
+	void Destory()
+	{
+		if (arr)
+		{
+			delete[]arr;
+			arr = nullptr;
+			SIZE = 0;
+		}
+	}
+
+	void ClearList()
+	{
+		if (arr)
+		{
+			for (int i = 0; i < SIZE; i++)
+			{
+				arr[i] = 0;
+			}
+		}
+	}
+
+	bool ListEmpty()
+	{
+		if (!arr||SIZE==0)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	int ListLength()
+	{
+		if (arr)
+		{
+			return SIZE;
+		}
+		return 0;
+	}
+
+	int GetElem(int& e, int i)
+	{
+		if (i < 1 || i > SIZE) 
+			return -1; // 增加边界检查
+		int index = i - 1;
+		e = arr[index];
+		return e;
+	}
+
+	bool compare(int element,int e)
+	{
+		//元素关系为前者等于后者
+		if (element == e)
+			return true;
+		return false;
+	}
+
+	int LocateElem(int e)
+	{
+		int result = 0;
+		for (int i = 0; i < SIZE; i++)
+		{
+			if (compare(arr[i], e))
+			{
+				result = i + 1;//返回第result个位置.
+				break;
+			}
+		}
+		return result;
+	}
+	bool PriorElem(int& pre_e, int cur_e)
+	{
+		if (!arr || SIZE < 2) 
+			return false;
+		for (int i = 1; i < SIZE; i++)
+		{
+			if (arr[i] == cur_e)
+			{
+				pre_e = arr[i - 1];
+				return true;
+			}
+		}
+		return false;
+	}
+
+	bool NextElem(int& next_e, int cur_e)
+	{
+		if (!arr || SIZE < 2) 
+			return false;
+		for (int i = 0; i < SIZE - 1; i++)
+		{
+			if (arr[i] == cur_e)
+			{
+				next_e = arr[i + 1];
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void ListInsert(int i, int e)
+	{
+		if (i < 1 || i > SIZE + 1)
+			return; // 检查范围
+
+		int* newArr = new int[SIZE + 1];
+
+		// 1. 拷贝插入位置之前的部分
+		for (int j = 0; j < i - 1; j++)
+		{
+			newArr[j] = arr[j];
+		}
+
+		// 2. 插入新元素
+		newArr[i - 1] = e;
+
+		// 3. 拷贝插入位置之后的部分
+		for (int j = i - 1; j < SIZE; j++)
+		{
+			newArr[j + 1] = arr[j];
+		}
+
+		// 释放旧内存并更新指针和大小
+		if (arr)
+		{
+			delete[] arr;
+		}
+		arr = newArr;
+		SIZE++;
+	}
+
+	int ListDelete(int i, int& e)
+	{
+		if (i < 1 || i > SIZE) return -1; // 检查范围
+		e = arr[i - 1];
+		int* newArr = new int[SIZE - 1];
+		for (int j = 0; j < i - 1; j++)
+			newArr[j] = arr[j];
+		for (int j = i; j < SIZE; j++)
+			newArr[j - 1] = arr[j];
+		delete[] arr;
+		arr = newArr;
+		SIZE--;
+		return e;
+	}
+
+	void visit(int element)
+	{
+		//某被调用函数
+	}
+
+	void display()
+	{
+		for (int i = 0; i < SIZE; i++)
+		{
+			if (i != SIZE - 1)
+				cout << arr[i] << " ";
+			else
+				cout << arr[i] << endl;
+		}
+	}
+	void ListTraverse()
+	{
+		for (int i = 0; i < SIZE; i++)
+		{
+			visit(arr[i]);
+		}
+	}
+	~List()
+	{
+		delete[]arr;
+		arr = nullptr;
+		SIZE = 0;
+	}
+};
+void Union(List& La, List& Lb)
+{
+	int Lb_len = Lb.ListLength();
+	for (int i = 1; i <= Lb_len; i++)
+	{
+		int e = 0;
+		Lb.GetElem(e, i);
+		if (!La.LocateElem(e))
+			La.ListInsert(La.ListLength() + 1, e);
+	}
+}
+int main()
+{
+	List La, Lb;
+	int arr1[6] = { 1,2,3,4,5,6 };
+	int arr2[5] = { 2,4,6,7,3 };
+	La.InitList(arr1,6);
+	Lb.InitList(arr2,5);
+	Union(La, Lb);
+	La.display();
+	return 0;
+}
+
