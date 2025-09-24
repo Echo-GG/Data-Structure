@@ -1,0 +1,273 @@
+//#include <iostream>
+//using namespace std;
+//struct List
+//{
+//	int* arr;
+//	int SIZE;
+//	List() { arr = nullptr; SIZE = 0; }
+//	List(int n):arr(nullptr),SIZE(n){}
+//};
+//
+//void InitList(List& list,int* num, int n)
+//{
+//	list.arr = new int[n];
+//	list.SIZE = n;
+//	for (int i = 0; i < n; i++)
+//	{
+//		list.arr[i] = num[i];
+//	}
+//}
+//
+//int GetElem(List ls, int pos, int& result)
+//{
+//	if (pos <= 0 || pos > ls.SIZE)
+//		return -1;
+//	int index = pos - 1;
+//	result = ls.arr[index];
+//	return result;
+//}
+//
+//void ListInsert(List& ls, int pos, int e)
+//{
+//	if (pos < 1 || pos> ls.SIZE + 1)
+//	{
+//		return;
+//	}
+//	int* newArr = new int[ls.SIZE+1];
+//	int index = pos - 1;
+//	for (int i = index; i < ls.SIZE; i++)
+//	{
+//		newArr[i+1] = ls.arr[i];
+//	}
+//	newArr[index] = e;
+//	for (int i = 0; i < index; i++)
+//	{
+//		newArr[i] = ls.arr[i];
+//	}
+//	ls.SIZE++;
+//	delete[]ls.arr;
+//	ls.arr = newArr;
+//}
+//
+//void MergeList(List l1, List l2, List& l3)
+//{
+//	//已知线性表l1,l2中的数据元素按值非递减排列.
+//	l3.SIZE = l1.SIZE + l2.SIZE;
+//	int n1 = l1.SIZE;
+//	int n2 = l2.SIZE;
+//	int n3 = l3.SIZE;
+//	l3.arr = new int[n3];
+//	for (int i = 0; i < n3; i++)
+//	{
+//		l3.arr[i] = 0;
+//	}
+//	int i = 1;
+//	int j = 1;
+//	int k = 0;
+//	int result1 = 0;
+//	int result2 = 0;
+//	while (i <= n1 && j <= n2)
+//	{
+//
+//		GetElem(l1, i, result1);
+//		GetElem(l2, j, result2);
+//		if (result1 <= result2)
+//		{
+//			ListInsert(l3, ++k, result1);	
+//			l3.SIZE--;
+//			++i;
+//		}
+//		else
+//		{
+//			ListInsert(l3, ++k, result2);
+//			l3.SIZE--;
+//			++j;
+//		}
+//	}
+//	while (i <= n1)
+//	{
+//		GetElem(l1, i++, result1);
+//		ListInsert(l3, ++k, result1);
+//		l3.SIZE--;
+//	}
+//	while (j <= n2)
+//	{
+//		GetElem(l2, j++, result2);
+//		ListInsert(l3, ++k, result2);
+//		l3.SIZE--;
+//	}
+//}
+//
+////void Delete(List& ls, int pos)
+////{
+////	if (pos < 1 || pos > ls.SIZE)
+////		return;
+////	int index = pos - 1;
+////	int* newArr = new int[ls.SIZE - 1];
+////	for (int i = 0; i < index; i++)
+////	{
+////		newArr[i] = ls.arr[i];
+////	}
+////	for (int i = index; i < ls.SIZE-1; i++)
+////	{
+////		newArr[i] = ls.arr[i+1];
+////	}
+////	ls.SIZE--;
+////	delete[]ls.arr;
+////	ls.arr = newArr;
+////}
+//
+//void Display(List& ls)
+//{
+//	for (int i = 0; i < ls.SIZE; i++)
+//	{
+//		if (i != ls.SIZE - 1)
+//		{
+//			cout << ls.arr[i] << " ";
+//		}
+//		else
+//		{
+//			cout << ls.arr[i] << endl;
+//		}
+//	}
+//}
+//
+//int main()
+//{
+//	int LA[4] = { 3,5,8,11 };
+//	int LB[7]= { 2,6,8,9,11,15,20 };
+//	List La, Lb;
+//	InitList(La, LA, 4);
+//	InitList(Lb, LB, 7);
+//	List Lc;
+//	MergeList(La, Lb, Lc);
+//	Display(Lc);
+//
+//	return 0;
+//}
+
+
+//revised
+#include <iostream>
+using namespace std;
+/*禁用拷贝构造和赋值运算符，避免浅拷贝：
+struct List
+{
+    int* arr;
+    int SIZE;
+    List() : arr(nullptr), SIZE(0) {}
+    List(int n) : arr(new int[n]), SIZE(n) {}
+    ~List() { delete[] arr; arr = nullptr; }
+
+    // 禁止拷贝构造和赋值，防止浅拷贝导致内存问题
+    //List(const List&) = delete;
+    //List& operator=(const List&) = delete;
+
+};
+*/
+/*const List&介绍：
+•	const List& 是常量引用，表示对 List 类型对象的只读引用。
+•	引用（& ）避免了对象的拷贝，提高效率，且不会触发拷贝构造函数（不会发生浅拷贝问题）。
+•	const 修饰，保证函数内部不会修改被引用的对象内容，增加安全性。*/
+
+//直接手动实现深拷贝：
+struct List
+{
+    int* arr;
+    int SIZE;
+    List() : arr(nullptr), SIZE(0) {}
+    List(int n) : arr(new int[n]), SIZE(n) {}
+    ~List() { delete[] arr; arr = nullptr; }
+
+    // 深拷贝构造函数
+    List(const List& other)
+    {
+        SIZE = other.SIZE;
+        if (SIZE > 0)
+        {
+            arr = new int[SIZE];
+            for (int i = 0; i < SIZE; ++i)
+                arr[i] = other.arr[i];
+        }
+        else
+        {
+            arr = nullptr;
+        }
+    }
+
+    // 深拷贝赋值运算符
+    List& operator=(const List& other)
+    {
+        if (this == &other) 
+            return *this; // 自赋值保护
+        delete[] arr;
+        SIZE = other.SIZE;
+        if (SIZE > 0)
+        {
+            arr = new int[SIZE];
+            for (int i = 0; i < SIZE; ++i)
+                arr[i] = other.arr[i];
+        }
+        else
+        {
+            arr = nullptr;
+        }
+        return *this;
+    }
+};
+void InitList(List& list, int* num, int n)
+{
+    if (list.arr) 
+        delete[] list.arr;
+    list.arr = new int[n];
+    list.SIZE = n;
+    for (int i = 0; i < n; i++)
+    {
+        list.arr[i] = num[i];
+    }
+}
+
+//已知线性表l1,l2中的数据元素按值非递减排列.
+void MergeList(const List& l1, const List& l2, List& l3)
+{
+    if (l3.arr) 
+        delete[] l3.arr;
+    l3.SIZE = l1.SIZE + l2.SIZE;
+    l3.arr = new int[l3.SIZE];
+    int i = 0, j = 0, k = 0;
+    while (i < l1.SIZE && j < l2.SIZE)
+    {
+        if (l1.arr[i] <= l2.arr[j])
+            l3.arr[k++] = l1.arr[i++];
+        else
+            l3.arr[k++] = l2.arr[j++];
+    }
+    while (i < l1.SIZE)
+        l3.arr[k++] = l1.arr[i++];
+    while (j < l2.SIZE)
+        l3.arr[k++] = l2.arr[j++];
+}
+
+void Display(const List& ls)
+{
+    for (int i = 0; i < ls.SIZE; i++)
+    {
+        if (i != ls.SIZE - 1)
+            cout << ls.arr[i] << " ";
+        else
+            cout << ls.arr[i] << endl;
+    }
+}
+
+int main()
+{
+    int LA[4] = { 3,5,8,11 };
+    int LB[7] = { 2,6,8,9,11,15,20 };
+    List La, Lb;
+    InitList(La, LA, 4);
+    InitList(Lb, LB, 7);
+    List Lc;
+    MergeList(La, Lb, Lc);
+    Display(Lc);
+    return 0;
+}
