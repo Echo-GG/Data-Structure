@@ -1,0 +1,161 @@
+//不使用queue的实现,借助类数组.
+/*
+#include <bits/stdc++.h>
+using namespace std;
+static int timeA = 0;
+static int timeB = 0;
+static int timeC = 0;
+static int cntA = 0;
+static int cntB = 0;
+static int cntC = 0;
+class Customer
+{
+	private:
+		int time;
+		char type;
+	public:
+		Customer()
+		{
+			time = 0;
+			type='\0';			
+		}			
+		Customer(int a,char b):time(a),type(b){}
+		char get_type()const
+		{
+			return type;
+		}
+		int get_time()const
+		{
+			return time;
+		}
+		
+};
+int main()
+{
+	int n;
+	cin>>n;
+	char *type = new char [n];
+	for(int i=0;i<n;i++)
+	{
+		cin>>type[i];
+	}
+	int *time = new int [n];
+	for(int i=0;i<n;i++)
+	{
+		cin>>time[i];
+	}
+	Customer* customer = new Customer[n];
+	for(int i=0;i<n;i++)
+	{
+		customer[i] = Customer(time[i],type[i]);
+	}
+  for(int i=0;i<n;i++)
+	{
+		if(customer[i].get_type()=='A')
+		{
+			timeA+=customer[i].get_time();
+			cntA++;
+		}
+		else if(customer[i].get_type()=='B')
+		{
+			timeB+=customer[i].get_time();
+			cntB++;
+		}
+		else if(customer[i].get_type()=='C')
+		{
+			timeC+=customer[i].get_time();
+			cntC++;
+		}
+	}
+	float avgA = timeA/cntA;
+	float avgB = timeB/cntB;
+	float avgC = timeC/cntC;
+	cout<<avgA<<endl<<avgB<<endl<<avgC<<endl;
+	
+	delete[]customer;
+	delete[]type;
+	delete[]time;
+	return 0;
+}
+*/
+//使用queue的实现
+#include <iostream>
+#include <queue>
+using namespace std;
+
+class Customer
+{
+private:
+    int time;
+    char type;
+public:
+    Customer() : time(0), type('\0') {}
+    Customer(int a, char b) : time(a), type(b) {}
+    char get_type() const { return type; }
+    int get_time() const { return time; }
+};
+
+int main()
+{
+    int n;
+    cin >> n;
+    char* type = new char[n];
+    int* time = new int[n];
+
+    for (int i = 0; i < n; i++)
+        cin >> type[i];
+    for (int i = 0; i < n; i++)
+        cin >> time[i];
+
+    queue<Customer> qA, qB, qC;
+
+    for (int i = 0; i < n; i++)
+    {
+        Customer c(time[i], type[i]);
+        if (type[i] == 'A')
+            qA.push(c);
+        else if (type[i] == 'B')
+            qB.push(c);
+        else if (type[i] == 'C')
+            qC.push(c);
+    }
+
+    int sumA = 0, sumB = 0, sumC = 0;
+    int cntA = qA.size(), cntB = qB.size(), cntC = qC.size();
+
+    while (!qA.empty())
+    {
+        sumA += qA.front().get_time();
+        qA.pop();
+    }
+    while (!qB.empty())
+    {
+        sumB += qB.front().get_time();
+        qB.pop();
+    }
+    while (!qC.empty())
+    {
+        sumC += qC.front().get_time();
+        qC.pop();
+    }
+
+    float avgA = cntA ? (float)sumA / cntA : 0;
+    float avgB = cntB ? (float)sumB / cntB : 0;
+    float avgC = cntC ? (float)sumC / cntC : 0;
+
+    cout << avgA << endl << avgB << endl << avgC << endl;
+
+    delete[] type;
+    delete[] time;
+    return 0;
+}
+/*测试样例如下
+8
+A B C B C A A A
+10 20 30 40 50 60 70 80
+*/
+/*输出样例如下
+55
+33
+40
+*/
