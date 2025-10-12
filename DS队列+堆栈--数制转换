@@ -1,0 +1,99 @@
+#include <bits/stdc++.h>
+using namespace std;
+int main()
+{
+	int t;
+	cin>>t;
+	while(t--)
+	{
+		float n;
+		int k;//2<=k<=16
+		cin>>n>>k;
+		int int_part =(int)n;
+		float frac_part = n - int_part;
+		int tmp_int = int_part;
+		float tmp_frac = frac_part;
+		
+		//int_part_transformation
+		stack<int>transformed_int;
+		while(tmp_int/k!=0)
+		{
+			transformed_int.push(tmp_int%k);
+			tmp_int/=k;
+		}
+		transformed_int.push(tmp_int%k);
+		
+		//debug1
+//		while(!transformed_int.empty())
+//		{
+//			cout<<transformed_int.top();
+//			transformed_int.pop();
+//		}
+//		cout<<endl;
+		//unfinished:15->F
+		
+		//frac_part_transformation
+		queue<int>transformed_frac;
+		int float_digits = 0;
+		while(float_digits<=3&&tmp_frac*k!=(int)(tmp_frac*k))
+		{
+			float_digits++;
+			transformed_frac.push((int)(tmp_frac*k));
+			tmp_frac*=k;
+		}
+		
+		//debug3
+//		cout<<(int)k*tmp_frac<<endl;
+
+		transformed_frac.push((int)(tmp_frac*k));
+		float_digits++;
+		//comment1:(int)tmp_frac*k!=(int)(tmp_frac*k).
+		
+		//debug4
+//		cout<<transformed_frac.back()<<endl;
+
+		//debug2
+//		while(!transformed_frac.empty())
+//		{
+//			cout<<transformed_frac.front();
+//			transformed_frac.pop();
+//		}
+//		cout<<endl;
+		
+		//output result:
+		while(!transformed_int.empty())
+		{
+			if(transformed_int.top()<10)
+				cout<<transformed_int.top();
+			else
+				cout<<(char)(transformed_int.top()-10+'A');
+			//to avoid the if-else (too much).
+			transformed_int.pop();
+		}
+		cout<<".";
+		while(!transformed_frac.empty())
+		{
+			if(transformed_frac.front()<10)
+				cout<<transformed_frac.front();
+			else
+				cout<<(char)(transformed_frac.front()-10+'A');
+				//the same logic.
+			transformed_frac.pop();
+		}
+//		if(transformed_frac().size()<3)
+//		{
+//			for(int i=transformed_frac.size();i<3;i++)
+//				cout<<"0";
+//		}
+//		cout<<endl;
+		if(float_digits<3)
+		{
+			for(int i=float_digits;i<3;i++)
+				cout<<"0";
+		}
+		cout<<endl;
+	}
+	
+	
+	return 0;
+}
