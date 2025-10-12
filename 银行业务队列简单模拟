@@ -1,0 +1,55 @@
+#include <bits/stdc++.h>
+using namespace std;
+int main()
+{
+	int N;
+	cin>>N;
+	vector<int>ids;
+	for(int i=0;i<N;i++)
+	{
+		int tmp;
+		cin>>tmp;
+		ids.push_back(tmp);
+	}
+	queue<int> qA,qB;
+	for(int i=0;i<ids.size();i++)
+	{
+		if(ids[i]%2==0)
+		{
+			qB.push(ids[i]);
+		}
+		else
+		{
+			qA.push(ids[i]);
+		}
+	}
+	vector<int>out;
+	while(qA.size()>=2&&!qB.empty())
+	{
+		out.push_back(qA.front());
+		qA.pop();
+		out.push_back(qA.front());
+		qA.pop();
+		out.push_back(qB.front());
+		qB.pop();
+	}
+	while(!qA.empty())
+	{
+		out.push_back(qA.front());
+		qA.pop();
+	}
+	while(!qB.empty())
+	{
+		out.push_back(qB.front());
+		qB.pop();
+	}
+	for(int i=0;i<out.size();i++)
+	{
+		if(i!=out.size()-1)
+			cout<<out[i]<<" ";
+		else
+			cout<<out[i]<<endl;
+	}
+	
+	return 0;
+}
