@@ -1,0 +1,95 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string>
+using namespace std;
+
+struct Node 
+{
+    char val;
+    Node* left;
+    Node* right;
+    Node(char c) : val(c), left(nullptr), right(nullptr) {}
+};
+
+
+Node* build(const string& s, int& pos)
+{
+    if (pos >= (int)s.size() || s[pos] == '#') 
+	{
+        pos++;
+        return nullptr;
+    }
+    Node* node = new Node(s[pos++]);
+    node->left = build(s, pos);
+    node->right = build(s, pos);
+    return node;
+}
+
+int main() 
+{
+    int t;
+    cin >> t;
+    while (t--) 
+	{
+        string s;
+        cin >> s;
+        int pos = 0;
+        Node* root = build(s, pos);
+
+        vector<Node*> nodes;
+        vector<int> parent;
+        
+        queue<Node*> q;
+        queue<int> fq; 
+
+        if (root) 
+		{
+            q.push(root);
+
+            fq.push(-1);
+            while (!q.empty()) 
+			{
+                Node* p = q.front();
+				q.pop();
+                int fa = fq.front(); 
+				fq.pop();
+                int idx = nodes.size();
+                nodes.push_back(p);
+                parent.push_back(fa);
+                
+                if (p->left) 
+				{
+                    q.push(p->left);
+                    fq.push(idx);
+                }
+                
+                if (p->right) 
+				{
+                    q.push(p->right);
+                    fq.push(idx);
+                }
+            }
+        }
+
+        for (size_t i = 0; i < nodes.size(); i++) 
+		{
+            cout << nodes[i]->val;
+            if (i + 1 < nodes.size()) 
+				cout << ' ';
+        }
+        cout << endl;
+
+        for (size_t i = 0; i < parent.size(); i++) 
+		{
+            cout << parent[i];
+            if (i + 1 < parent.size()) 
+				cout << ' ';
+        }
+        cout << endl;
+//
+//        for (size_t i = 0; i < nodes.size(); i++) 
+//			delete nodes[i];
+    }
+    return 0;
+}
