@@ -1,0 +1,33 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+int getHeight(const string& pre, int preL, int preR, const string& in, int inL, int inR) 
+{
+    if (preL > preR) 
+		return 0;
+    char root = pre[preL];
+    int k = inL;
+    while (k <= inR && in[k] != root) 
+		k++;
+	//在中序序列中找到根节点所对应的数组下标
+	
+    int leftLen = k - inL;
+    int rightLen = inR - k;
+    
+    int leftH = getHeight(pre, preL + 1, preL + leftLen, in, inL, k - 1);
+    
+    int rightH = getHeight(pre, preL + leftLen + 1, preR, in, k + 1, inR);
+    
+    return 1 + max(leftH, rightH);//不加1只会得到子树高度而不包括根节点
+}
+
+int main() 
+{
+    int N;
+    cin >> N;
+    string pre, in;
+    cin >> pre >> in;
+    cout << getHeight(pre, 0, N - 1, in, 0, N - 1) << endl;
+    return 0;
+}
