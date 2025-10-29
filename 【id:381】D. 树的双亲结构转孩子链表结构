@@ -1,0 +1,44 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() 
+{
+    int n;
+    cin >> n;
+    vector<char> char_set(n);
+    for (int i = 0; i < n; i++) 
+	{
+        cin >> char_set[i];
+    }
+    vector<int> parent(n);
+    for (int i = 0; i < n; i++) 
+	{
+        cin >> parent[i];
+    }
+    vector<vector<int>> children(n); 
+    for (int i = 0; i < n; i++) 
+	{
+        if (parent[i] != -1) 
+		{
+            children[parent[i]].push_back(i);
+        }
+    }
+    for (int i = 0; i < n; i++) 
+	{
+        cout << char_set[i] << " ";
+        if (children[i].empty()) 
+		{
+            cout << "-1 ";
+        } 
+		else 
+		{
+            for (int v : children[i]) 
+			{
+                cout << v << " ";
+            }
+        }
+        cout << endl;
+    }
+    return 0;
+}
