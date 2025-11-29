@@ -1,0 +1,45 @@
+#include <iostream>
+#include <string>
+using namespace std;
+struct Node{
+	char data;
+	Node* left;
+	Node* right;
+	Node(char d):data(d),left(NULL),right(NULL){}	
+};
+Node* PreCreate(const string&s, int&idx)
+{
+	if(idx>=s.length())
+		return NULL;
+	char ch = s[idx];
+	idx++;
+	if(ch=='0')
+		return NULL;
+	Node* root = new Node(ch);
+	root->left = PreCreate(s,idx);
+	root->right = PreCreate(s,idx);
+	return root;
+}
+int FindHeight(Node*root)
+{
+	if(root==NULL)
+		return 0;
+	return max(FindHeight(root->left),FindHeight(root->right))+1;
+}
+int main()
+{
+	int t;
+	cin>>t;
+	while(t--)
+	{
+	
+		string s;
+		cin>>s;
+		int idx = 0;
+		Node* root  = PreCreate(s,idx);
+		cout<< FindHeight(root) <<endl;
+	}
+	
+	
+	return 0;
+}
