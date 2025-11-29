@@ -1,0 +1,61 @@
+#include <iostream>
+#include <string>
+#include <queue>
+using namespace std;
+struct Node{
+	char data;
+	Node* left;
+	Node* right;
+	Node(char d):data(d),left(NULL),right(NULL){}	
+};
+
+Node* PreCreate(const string&s ,int &idx)
+{
+	if(idx>=s.length())
+		return NULL;
+	char ch = s[idx];
+	idx++;
+	if(ch=='0')
+		return NULL;
+	Node* root = new Node(ch);
+	root->left = PreCreate(s,idx);
+	root->right = PreCreate(s,idx);
+	return root;
+}
+
+void LevelOrder(Node* root)
+{
+	if(root==NULL)
+		return ;
+	queue<Node*> Q;
+	Q.push(root);
+	while(!Q.empty())
+	{
+		Node* current = Q.front();
+		cout<<current->data;
+		if(current->left!=NULL)
+			Q.push(current->left);
+		if(current->right!=NULL)
+			Q.push(current->right);
+		Q.pop();
+	}
+	
+}
+
+int main()
+{
+	int t;
+	cin>>t;
+	while(t--)
+	{
+		string s;
+		cin>>s;
+		int idx = 0;
+		Node* root = PreCreate(s,idx);
+		LevelOrder(root);
+		cout<<endl;
+	}
+	
+	
+	return 0;
+}
