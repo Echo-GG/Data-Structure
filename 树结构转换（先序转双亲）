@@ -1,0 +1,91 @@
+#include <iostream>
+#include <string>
+#include <queue>
+using namespace std;
+
+struct Node{
+	char data;
+	Node* left;
+	Node* right;	
+	Node(char d):data(d),left(NULL),right(NULL){}
+};
+
+Node* PreCreate(const string&s,int &idx)
+{
+	if(idx>=s.length())
+		return NULL;
+	char ch = s[idx];
+	idx++;
+	if(ch=='#')
+		return NULL;
+	Node* root = new Node(ch);
+	root->left = PreCreate(s,idx);
+	root->right = PreCreate(s,idx);
+	return root;
+}
+pair<char,int>* LevelOrder(Node* root, int &size)
+{
+    pair<char,int>* my_pair = new pair<char,int>[100];
+    if(root == NULL)
+        return NULL;
+    queue<pair<Node*, int>> Q; 
+    Q.push({root, -1});
+    while(!Q.empty())
+    {
+        Node* current = Q.front().first;
+        int parent = Q.front().second;
+        Q.pop();
+        my_pair[size].first = current->data;
+        my_pair[size].second = parent;
+     
+        if(current->left)
+            Q.push({current->left, size});
+        if(current->right)
+            Q.push({current->right, size});
+        size++;
+    }
+    return my_pair;
+}
+
+int main()
+{
+	int t;
+	cin>>t;
+	while(t--)
+	{
+		
+		string s;
+		cin>>s;
+		int idx = 0;
+		Node* root = PreCreate(s,idx);	
+		int size = 0;
+		pair<char,int>*my_pair = LevelOrder(root,size);
+		for(int i=0;i<size;i++)
+		{
+			if(i!=size-1)
+			{
+				cout<<my_pair[i].first<<" ";
+			}
+			else
+			{
+				cout<<my_pair[i].first<<endl;
+			}
+		}
+		for(int i=0;i<size;i++)
+		{
+			if(i!=size-1)
+			{
+				cout<<my_pair[i].second<<" ";
+			}
+			else
+			{
+				cout<<my_pair[i].second<<endl;
+			}
+		}
+		
+		delete my_pair;
+	}	
+	
+	
+	return 0;
+}
