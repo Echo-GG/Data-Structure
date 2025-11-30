@@ -1,0 +1,50 @@
+#include <iostream>
+using namespace std;
+struct Node{
+	Node* left;
+	Node* right;
+	char data;
+	Node(char d):data(d),left(NULL),right(NULL){}		
+};
+Node* PreCreate(const string& s,int& idx)
+{
+	if(idx>=s.length())
+		return NULL;
+	char ch = s[idx++];
+	if(ch=='0')
+		return NULL;
+	Node* root = new Node(ch);
+	root->left = PreCreate(s,idx);
+	root->right = PreCreate(s,idx);
+	return root;
+}
+
+void Leaves(Node* root,int& cnt)
+{
+	if(!root)
+		return ;
+	Leaves(root->left,cnt);
+	Leaves(root->right,cnt);
+	if(root->left==NULL&&root->right==NULL)
+		cnt++;
+
+}
+
+int main()
+{
+	int t;
+	cin>>t;
+	while(t--)
+	{
+		string s;
+		cin>>s;
+		int idx = 0;
+		Node* root = PreCreate(s,idx);	
+		int leaves = 0;
+		Leaves(root,leaves);
+		cout<<leaves<<endl;
+	}	
+	
+	
+	return 0;
+}
