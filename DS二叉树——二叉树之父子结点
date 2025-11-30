@@ -1,0 +1,77 @@
+#include <iostream>
+#include <queue>
+using namespace std;
+struct Node{
+	Node* left;
+	Node* right;
+	Node* parent;
+	char data;
+	Node(char d):data(d),left(NULL),right(NULL),parent(NULL){}	
+};
+
+Node* PreCreate(const string& s,int& idx,Node* parent)
+{
+	if(idx>=s.length())
+		return NULL;
+	char ch = s[idx++];
+	if(ch=='0')
+		return NULL;
+	Node* root = new Node(ch);
+	root->left = PreCreate(s,idx,root);
+	root->right = PreCreate(s,idx,root);
+	root->parent = parent;
+	return root;
+}
+
+void Preorder_leaves(Node* root,queue<Node*>& parents)
+{
+	if(!root)
+		return ;
+	if(root->left==NULL&&root->right==NULL)
+	{
+		cout<<root->data<<" ";
+//		Node* cur = root->parent;
+//		parents.push(cur);
+		parents.push(root->parent);
+	}
+	Preorder_leaves(root->left,parents);
+	Preorder_leaves(root->right,parents);	
+}
+
+void Parent_print(queue<Node*>& Q)
+{
+	while(!Q.empty())
+	{
+		Node* current = Q.front();
+		
+		Q.pop();
+		
+		if(current)
+			cout<<current->data<<" ";
+		
+	}
+	
+	cout<<endl;
+
+}
+
+int main()
+{
+	int t;
+	cin>>t;
+	while(t--)
+	{
+		string s;
+		cin>>s;
+		int idx = 0;
+		Node* root = PreCreate(s,idx,NULL);	
+		queue<Node*> Q;
+		Preorder_leaves(root,Q);
+		cout<<endl;
+		Parent_print(Q);
+
+	}	
+	
+	
+	return 0;
+}
