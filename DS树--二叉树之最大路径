@@ -1,0 +1,71 @@
+#include <iostream>
+
+using namespace std;
+struct Node{
+	Node* left;
+	Node* right;
+	char data;
+	int val;
+	Node(char d):data(d),left(NULL),right(NULL),val(0){}	
+};
+Node* PreCreate(const string& s,int& idx,int w[],int& widx)
+{
+	if(idx>=s.length())
+		return NULL;
+	char ch = s[idx++];
+	if(ch=='0')
+		return NULL;
+	Node* root = new Node(ch);
+	root->val = w[widx++];
+	root->left = PreCreate(s,idx,w,widx);
+	root->right = PreCreate(s,idx,w,widx);	
+	return root;
+}
+
+int MaxPath(Node* root)
+{
+	if(root==NULL)
+		return 0;
+	if(root->left==NULL&&root->right==NULL)
+		return root->val;
+	int left = 0;
+	if(root->left!=NULL)
+	{
+		left = MaxPath(root->left);
+	}
+	int right = 0;
+	if(root->right!=NULL)
+	{
+		right = MaxPath(root->right);
+	}
+	if(left>right)
+		return root->val + left;
+	else
+		return root->val + right;
+}
+int main()
+{
+	int t;
+	cin>>t;
+	while(t--)
+	{
+		string s;
+		cin>>s;
+	
+		int n;
+		cin>>n;
+		int w[100];
+		for(int i=0;i<n;i++)
+			cin>>w[i];
+		int idx = 0;
+		int widx = 0;
+		Node* root = PreCreate(s,idx,w,widx);
+		cout<<MaxPath(root)<<endl;
+		
+		
+		
+	}
+	
+	
+	return 0;
+}
