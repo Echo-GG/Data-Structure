@@ -1,0 +1,58 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+struct Node{
+	int data;
+	Node* left;
+	Node* right;
+	Node(int d):data(d),left(NULL),right(NULL){}	
+};
+void Preorder(Node* root)
+{
+	if(!root)
+		return ;
+	cout<<root->data<<" ";
+	Preorder(root->left);
+	Preorder(root->right);
+	
+}
+Node* ArrCreate(const vector<int>& arr,int idx)
+{
+	if(idx>=arr.size())
+		return NULL;
+	int tmp = arr[idx];
+	if(tmp==0)
+		return NULL;
+	
+	Node* root = new Node(tmp);
+	root->left = ArrCreate(arr,2*idx+1);
+	root->right = ArrCreate(arr,2*idx+2);
+	idx++;
+	return root;
+	
+}
+
+int main()
+{
+	int t;
+	cin>>t;
+	while(t--)
+	{
+		int n;
+		cin>>n;
+		vector<int> arr(n);
+		for(int i=0;i<n;i++)
+		{
+			cin>>arr[i];
+		}
+		int idx = 0;
+		Node* root = ArrCreate(arr,idx);
+		Preorder(root);
+		cout<<endl;
+	}
+	
+	
+	
+	return 0;
+}
