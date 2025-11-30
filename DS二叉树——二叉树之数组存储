@@ -28,7 +28,7 @@ Node* ArrCreate(const vector<int>& arr,int idx)
 	Node* root = new Node(tmp);
 	root->left = ArrCreate(arr,2*idx+1);
 	root->right = ArrCreate(arr,2*idx+2);
-	idx++;
+//	idx++;
 	return root;
 	
 }
