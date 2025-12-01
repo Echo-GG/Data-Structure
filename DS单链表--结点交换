@@ -1,0 +1,109 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+struct Node{
+	int val;
+	Node* next;
+	Node(int v):val(v),next(NULL){}
+};
+struct List{
+	Node* head;
+	List(){head=NULL;}	
+};
+void Print(Node* head)
+{
+	Node*p = head;
+	while(p->next)
+	{
+		cout<<p->val<<" ";
+		p = p->next;
+	}
+	cout<<p->val<<" ";
+	cout<<endl;
+}
+Node* Create(const vector<int>& arr,int &idx, Node*& head)
+{
+	if(idx>=arr.size())
+		return NULL;
+	Node* cur = new Node(arr[idx++]);
+	if(!head)
+		head = cur;
+	cur->next = Create(arr,idx,head);
+	return cur;
+}
+void Swap(int pos1,int pos2,Node*& head)
+{
+	if(pos1==pos2||head==NULL)
+		return ;
+	if(pos1>pos2)
+		swap(pos1,pos2);
+		
+	Node* prev1 = NULL;
+	Node* cur1 = head;
+	for(int i=1;i<pos1&&cur1;i++)
+	{
+		prev1 = cur1;
+		cur1 = cur1->next;
+	}
+	Node* prev2 = NULL;
+	Node* cur2 = head;
+	for(int i=1;i<pos2&&cur2;i++)
+	{
+		prev2 = cur2;
+		cur2 = cur2->next;
+	}
+	
+	if(cur1==NULL||cur2==NULL)
+		return ;
+	if(prev1)
+		prev1->next = cur2;
+	else
+		head = cur2;
+	if(prev2)
+		prev2->next = cur1;
+	else
+		head = cur1;
+	
+	Node* tmp = cur1->next;
+	cur1->next = cur2->next;
+	cur2->next = tmp;
+}
+int main()
+{
+	int n;
+	cin>>n;
+	vector<int>arr(n);
+	for(int i=0;i<n;i++)
+	{
+		cin>>arr[i];
+	}
+	Node* head = NULL;
+	int idx = 0;
+	Node* list = Create(arr,idx,head);
+	Print(list);
+	int pos1,pos2;
+	cin>>pos1>>pos2;
+	if(pos1<=0||pos2>=n+1)
+	{
+		cout<<"error\n";
+	}
+	else
+	{
+		Swap(pos1,pos2,list);
+		Print(list);
+	}
+	
+	int pos1_,pos2_;
+	cin>>pos1_>>pos2_;
+	if(pos1_<=0||pos2_>=n+1)
+	{
+		cout<<"error\n";
+	}
+	else
+	{
+		Swap(pos1_,pos2_,list);		
+		Print(list);
+	}
+
+	return 0;
+}
